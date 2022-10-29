@@ -47,5 +47,7 @@ ___
 Логин: bmk <br>
 Пароль: bmk <br>
 
+### Скриншоты
+___
 ![ETL_covid19_dag_graph](https://github.com/Bambik-git/ETL_covid19/blob/main/img/airflow_dag_graph.png)
 ![Telegram message](https://github.com/Bambik-git/ETL_covid19/blob/main/img/telegram.png)
