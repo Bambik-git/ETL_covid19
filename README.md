@@ -46,3 +46,6 @@ ___
 2. База Postgresql на которой находятся выгруженные данные о заболеваниях covid19 открыта на порту 5433 <br>
 Логин: bmk <br>
 Пароль: bmk <br>
+
+![ETL_covid19_dag_graph](https://github.com/Bambik-git/ETL_covid19/blob/main/img/airflow_dag_graph.png)
+![Telegram message](https://github.com/Bambik-git/ETL_covid19/blob/main/img/telegram.png)
