@@ -1,7 +1,7 @@
 version: '3'
 x-airflow-common:
   &airflow-common
-  image: apache/airflow:2.3.4
+  build: ./airflow
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -12,12 +12,11 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth, airflow.api.auth.backend.session'
     AIRFLOW_VAR_API_KEY: '${API_KEY}'
-    AIRFLOW_VAR_TELEGRAM_API_TOKEN: ${TELEGRAM_API_TOKEN}
-    AIRFLOW_VAR_TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-    _PIP_ADDITIONAL_REQUIREMENTS: 'apache-airflow-providers-telegram'
+    _PIP_ADDITIONAL_REQUIREMENTS: ''
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
+    - ./spark:/opt/airflow/spark
     - ./init/init_connections.sh:/opt/airflow/init_connections.sh
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -40,10 +39,10 @@ services:
     
   postgres_database:
     build: ./postgres
-#    environment:
-#      POSTGRES_USER: bmk
-#      POSTGRES_PASSWORD: bmk
-#      POSTGRES_DB: stage
+    environment:
+      POSTGRES_USER: bmk
+      POSTGRES_PASSWORD: bmk
+      POSTGRES_DB: stage
     ports:
       - 5433:5433
     restart: always
@@ -178,7 +177,51 @@ services:
       - -c
       - airflow
 
+  spark:
+    image: bitnami/spark
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_MASTER_WEBUI_PORT=4040
+    ports:
+      - 4040:4040
+    volumes: 
+      - ./apps:/opt/bitnami/spark-apps
   
+  spark-worker:
+    image: bitnami/spark
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_WORKER_WEBUI_PORT=4041
+    ports:
+      - 4041:4041
+    volumes:
+      - ./apps:/opt/bitnami/spark-apps
 
-#volumes:
-  #postgres-db-volume:
+  spark-worker-2:
+    image: bitnami/spark
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_WORKER_WEBUI_PORT=4042
+    ports:
+      - 4042:4042
+    volumes:
+      - ./apps:/opt/bitnami/spark-apps
+  
