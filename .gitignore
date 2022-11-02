@@ -1,0 +1,16 @@
+.idea
+idea
+
+*.log
+*.pot
+
+dags/__pychache__
+*/__pychache__/
+*.pyc
+.pyc
+
+logs/
+
+venv/
+.venv
+
