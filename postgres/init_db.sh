@@ -31,7 +31,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "warehouse" <<-EOSQ
 	fatality_rate float,
 	country varchar(30),
 	province varchar(50),
-	region_lat float,
-	region_long float
+	lat float,
+	long float
 	);
 EOSQL
