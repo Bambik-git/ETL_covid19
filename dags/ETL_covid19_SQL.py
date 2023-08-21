@@ -97,6 +97,14 @@ with DAG(
             f"DELETE from public.covid19_table ct where region_name IN ('Unknown', 'Recovered');"
     )
 
+    data_quality = SQLValueCheckOperator(
+        task_id='data_quality',
+        sql=f"SELECT COUNT(1) FROM covid19_table where day_of_data = '{ '{{ ds }}' }';",
+        pass_value=240,
+        tolerance=0.02,
+        conn_id='postgres_db'
+    )
+
     load_data = PostgresOperator(
         task_id='load_to_data_mart',
         postgres_conn_id='postgres_db',
@@ -104,13 +112,6 @@ with DAG(
             f"CALL insert_in_fact_covid19('{ '{{ ds }}' }');"
     )
 
-    data_quality = SQLValueCheckOperator(
-        task_id='data_quality',
-        sql=f"SELECT COUNT(1) FROM covid19_warehouse where date_day = '{ '{{ ds }}' }';",
-        pass_value=240,
-        tolerance=0.02,
-        conn_id='postgres_warehouse'
-    )
 
     # success_telegram_message = TelegramOperator(
     #     task_id='success_telegram_message',
@@ -121,5 +122,5 @@ with DAG(
     #     dag=dag
     # )
 
-    # extract_data >> transform_and_load_data >> data_quality >> success_telegram_message
-    extract_data >> transform_data >> load_data >> data_quality
+    # extract_data >> transform_data >> data_quality >> load_data >> success_telegram_message
+    extract_data >> transform_data >> data_quality >> load_data

@@ -7,6 +7,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.models import Variable
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.telegram.operators.telegram import TelegramOperator
 from airflow.operators.sql import SQLValueCheckOperator
 
@@ -113,7 +114,7 @@ with DAG(
         'COVID19_daily_transform_pandas',
         default_args=default_args,
         start_date=dt.datetime(2023, 0o1, 0o1),
-        end_date=dt.datetime(2023, 0o1, 0o2),
+        end_date=dt.datetime(2023, 0o1, 0o5),
         schedule_interval=dt.timedelta(days=1),
         catchup=True,
         on_failure_callback=on_failure_telegram_message,
@@ -135,13 +136,20 @@ with DAG(
         dag=dag
     )
 
-    # data_quality = SQLValueCheckOperator(
-    #     task_id='data_quality',
-    #     sql=f"SELECT COUNT(1) FROM covid19_warehouse where date_day = '{ '{{ ds }}' }' ",
-    #     pass_value=240,
-    #     tolerance=0.02,
-    #     conn_id='postgres_warehouse'
-    # )
+    data_quality = SQLValueCheckOperator(
+        task_id='data_quality',
+        sql=f"SELECT COUNT(1) FROM covid19_table where day_of_data = '{ '{{ ds }}' }' ",
+        pass_value=240,
+        tolerance=0.02,
+        conn_id='postgres_db'
+    )
+
+    load_data = PostgresOperator(
+        task_id='load_to_data_mart',
+        postgres_conn_id='postgres_db',
+        sql=f"call insert_fk_in_covid19_table('{ '{{ ds }}' }');"
+            f"CALL insert_in_fact_covid19('{ '{{ ds }}' }');"
+    )
 
     # success_telegram_message = TelegramOperator(
     #     task_id='success_telegram_message',
@@ -152,5 +160,5 @@ with DAG(
     #     dag=dag
     # )
 
-    # extract_data >> transform_and_load_data >> data_quality >> success_telegram_message
-    extract_data >> transform_data
+    # extract_data >> transform_data >> data_quality >> load_data >> success_telegram_message
+    extract_data >> transform_data >> data_quality >> load_data
