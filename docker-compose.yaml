@@ -16,7 +16,6 @@ x-airflow-common:
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
-    - ./spark:/opt/airflow/spark
     - ./init/init_connections.sh:/opt/airflow/init_connections.sh
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -40,9 +39,8 @@ services:
   postgres_database:
     build: ./postgres
     environment:
-      POSTGRES_USER: bmk
-      POSTGRES_PASSWORD: bmk
-      POSTGRES_DB: stage
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - 5433:5433
     restart: always
@@ -176,4 +174,4 @@ services:
       - bash
       - -c
       - airflow
-
+  

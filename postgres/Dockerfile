@@ -1,6 +1,8 @@
 FROM postgres:13
 
-COPY init_db.sh /docker-entrypoint-initdb.d/init_db.sh
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD 'postgres'
 
-ENV POSTGRES_USER bmk
-ENV POSTGRES_PASSWORD 'bmk'
+COPY pg_init_covid19.sql /docker-entrypoint-initdb.d/pg_init_covid19.sql
+
+
