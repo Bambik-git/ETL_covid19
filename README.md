@@ -10,7 +10,7 @@ ___
 Выгрузка данных об заболевания covid19( public data by Johns Hopkins CSSE ) просиходит из api который предоставляет сайт rapidapi.com <br>
 Эти данные загружаются в таблицу базы данных covid19_json . <br>
 Затем эти данные читаются из схемы БД, после чего происходит очистка и трансформация данных различными способами:<br>
-1. Pandas. С помозью данной библиотеки происходит трансформация и очистка фалй и запись в в таблицу.<br>
+1. Pandas. С помощью данной библиотеки происходит трансформация и очистка данных, а затем запись в таблицу.<br>
 2. Postgresql. Трансформация и очистка с помощью чистого SQL.<br>
 3. Spark(код). Трансформация происходит с помощью технологии распределенных вычислений Spark.<br>
 
@@ -57,3 +57,4 @@ ___
 ___
 ![ETL_covid19_dag_graph](https://github.com/Bambik-git/ETL_covid19/blob/main/img/airflow_dag_graph.png)
 ![Telegram message](https://github.com/Bambik-git/ETL_covid19/blob/main/img/telegram.png)
+![Data_mart_schema](https://github.com/Bambik-git/ETL_covid19/blob/main/img/data_mart_schema.png)
