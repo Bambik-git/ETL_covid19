@@ -55,9 +55,9 @@ ___
 
 ### Скриншоты
 ___
-DAG в Airflow:
+#### DAG в Airflow: <br>
 ![ETL_covid19_dag_graph](https://github.com/Bambik-git/ETL_covid19/blob/main/img/airflow_dag_graph.png)
-Сообщение в telegram:
+#### Сообщение в telegram: <br>
 ![Telegram message](https://github.com/Bambik-git/ETL_covid19/blob/main/img/telegram.png)
-Схема витрины данных:
+#### Схема витрины данных: <br>
 ![Data_mart_schema](https://github.com/Bambik-git/ETL_covid19/blob/main/img/data_mart_schema.png)
