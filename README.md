@@ -25,7 +25,7 @@ ___
 3. Pandas производит трансформацию и склеивание данных об статистике из пяти стран. <br>
 4. Docker-compose контейнизатор для сборки и развертывания пайплайна.
 
-### Начнем
+### Начало работы
 ___
 1. Необходимо клонировать репозиторий на ваш ПК.
 2. Отркыть терминал в папке куда загружен репозиторий и ввести команды:
@@ -55,6 +55,9 @@ ___
 
 ### Скриншоты
 ___
+DAG в Airflow:
 ![ETL_covid19_dag_graph](https://github.com/Bambik-git/ETL_covid19/blob/main/img/airflow_dag_graph.png)
+Сообщение в telegram:
 ![Telegram message](https://github.com/Bambik-git/ETL_covid19/blob/main/img/telegram.png)
+Схема витрины данных:
 ![Data_mart_schema](https://github.com/Bambik-git/ETL_covid19/blob/main/img/data_mart_schema.png)
